@@ -437,7 +437,7 @@ class Window(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Window()
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- {} seconds ---".format(time.time() - start_time))
     window.show()
     sys.exit(app.exec_())
 # основное окно готово !!;)
