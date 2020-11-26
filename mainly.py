@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QSlider, QFileDialog,)
 import sys
+from second_main import SecondWindow
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
@@ -16,7 +17,8 @@ start_time = time.time()
 # (если запустить код пару раз то время будет отображаться корректне)
 
 
-class Window(QWidget):
+
+class FirstWindow(QWidget):
     '''
        В этом классе описывается внешний вид, логика и функционал моего видеоплеера версии 0.01
        постораюсь по мере возможности улучшать свой проект добавляя функционал и
@@ -45,8 +47,14 @@ class Window(QWidget):
         self.setMouseTracking(True)
         self.setCursor(Qt.PointingHandCursor)
         self.init_ui()
+        self.init_handlers()
 
+    def init_handlers(self):
+        self.btn1.clicked.connect(self.settings_window)
 
+    def settings_window(self):
+        self.w2 = SecondWindow()
+        self.w2.show()
 
     def event(self, e):
         '''Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
@@ -174,9 +182,13 @@ class Window(QWidget):
         self.one_moreBtn.setToolTipDuration(2500)
 
 # ----- кнопки для пустых мест ----- #
+
+        # создание button (для окна настроек)
         self.btn1 = QPushButton()
-        self.btn1.setEnabled(False)
-        self.btn1.setStyleSheet(conf_for_blank)
+        self.btn1.setIcon(QIcon(r'ico\setting.png'))
+        self.btn1.setIconSize((QSize(18, 18)))
+        self.btn1.setEnabled(True)
+        self.btn1.setStyleSheet(config)
 
         self.btn2 = QPushButton()
         self.btn2.setEnabled(False)
@@ -222,13 +234,13 @@ class Window(QWidget):
         hboxLayout2.addWidget(self.hslider)
 
         # добавления виджетов в hbox layout
-        hboxLayout.addWidget(self.btn1)
+        hboxLayout.addWidget(self.btn2)
         hboxLayout.addWidget(openBtn)
         hboxLayout.addWidget(self.backBtn)
         hboxLayout.addWidget(self.playBtn)
         hboxLayout.addWidget(self.forwardBtn)
         hboxLayout.addWidget(self.one_moreBtn)
-        hboxLayout.addWidget(self.btn2)
+        hboxLayout.addWidget(self.btn1)
 
         vboxLayout = QVBoxLayout()
         vboxLayout.addWidget(videowidget)
@@ -434,10 +446,11 @@ class Window(QWidget):
         self.mediaPlayer.setPosition(pos)
 
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = Window()
-    print("--- {} seconds ---".format(time.time() - start_time))
+    window = FirstWindow()
+    print("--- {} секунд ---".format(time.time() - start_time))
     window.show()
     sys.exit(app.exec_())
 # основное окно готово !!;)
