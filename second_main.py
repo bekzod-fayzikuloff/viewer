@@ -1,26 +1,63 @@
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
-from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
-import sys
+import sys, os
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QIcon
 
 
-class SecondWindow(QMainWindow):
+class ImageLabel(QLabel):
+    '''Класс унаследованный от класса QLabel  в нем мы прописываем описание параметров экземпляра этого класса'''
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Settings')
-        self.setWindowIcon(QIcon(r'ico\L.png'))
-        self.setFixedSize(QSize(720, 480))
-        pall = self.palette()
-        pall.setColor(QPalette.Window, QColor('#45484A'))
-        self.setPalette(pall)
 
-        self.init_ui()
+        self.setAlignment(Qt.AlignCenter)
+        self.setText('\n\n Перетените сюда ваше изображение \n\n')
+        self.setStyleSheet('''
+            QLabel{
+                border: 4px dashed #aaa
+            }
+        ''')
 
-    def init_ui(self):
-        pass
+    def setPixmap(self, image):
+        super().setPixmap(image)
 
 
-    def change_color(self):
-        return QColor('#45484A')
+class AppDemo(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.resize(400, 400)
+        self.setWindowTitle('Image Area')
+        self.setWindowIcon(QIcon(r'ico/L.png'))
+        self.setStyleSheet('background-color: #3C3F41')
+        self.setAcceptDrops(True)
+
+        mainLayout = QVBoxLayout()
+
+        self.photoViewer = ImageLabel()
+        mainLayout.addWidget(self.photoViewer)
+
+        self.setLayout(mainLayout)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasImage:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasImage:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasImage:
+            event.setDropAction(Qt.CopyAction)
+            file_path = event.mimeData().urls()[0].toLocalFile()
+            self.set_image(file_path)
+
+            event.accept()
+        else:
+            event.ignore()
+
+    def set_image(self, file_path):
+        self.photoViewer.setPixmap(QPixmap(file_path))

@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QSlider, QFileDialog,)
 import sys
-from second_main import SecondWindow
+from second_main import AppDemo
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
@@ -11,11 +11,10 @@ import time
 
 
 # полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5 и его классы и также модуль : sys, time, keyboard
-#_____________________________#
+# _____________________________#
 start_time = time.time()
 # также я добавил таймер для того чтобы знать сколько выполняется скрипт
 # (если запустить код пару раз то время будет отображаться корректне)
-
 
 
 class FirstWindow(QWidget):
@@ -31,19 +30,12 @@ class FirstWindow(QWidget):
         '''Инициализируем Класс нашего главного окна и в нем прописывем основные характеристики нашего окна (размер , цвет , "тайтл" и вызывает методы
          в которых отслеживаются события(перемещение мыши) и прописан внешний вид интерфейса '''
 
-        StyleSheet = '''TitleBar {
-        background-color:#B34EE9;}
-        '''
         super().__init__()
-
         self.setWindowTitle('v_|0.0.1|')
         self.setGeometry(350, 200, 1280, 666)
-        self.setWindowIcon(QIcon(r'ico\gold.png'))
+        self.setWindowIcon(QIcon(r'ico\L.png'))
+        self.setStyleSheet("background-color: #F0F0F0;")
 
-        pal = self.palette()
-        pal.setColor(QPalette.Window, QColor('#F0F0F0'))
-        self.setPalette(pal)
-        self.setStyleSheet(StyleSheet)
         self.setMouseTracking(True)
         self.setCursor(Qt.PointingHandCursor)
         self.init_ui()
@@ -53,7 +45,7 @@ class FirstWindow(QWidget):
         self.btn1.clicked.connect(self.settings_window)
 
     def settings_window(self):
-        self.w2 = SecondWindow()
+        self.w2 = AppDemo()
         self.w2.show()
 
     def event(self, e):
@@ -185,7 +177,8 @@ class FirstWindow(QWidget):
 
         # создание button (для окна настроек)
         self.btn1 = QPushButton()
-        self.btn1.setIcon(QIcon(r'ico\setting.png'))
+        self.btn1.setIcon(QIcon(r'ico\photo.png'))
+        self.one_moreBtn.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
         self.btn1.setIconSize((QSize(18, 18)))
         self.btn1.setEnabled(True)
         self.btn1.setStyleSheet(config)
@@ -206,7 +199,6 @@ class FirstWindow(QWidget):
         self.hslider.setRange(0, 100)
         self.hslider.setMaximumHeight(7)
         self.hslider.sliderMoved.connect(self.set_volume_position)
-        # self.hslider.setStyleSheet(sliders_style)
         self.hslider.setMaximumWidth(80)
         self.hslider.setSliderPosition(100)
 
@@ -276,7 +268,6 @@ class FirstWindow(QWidget):
             self.playBtn.setEnabled(True)
             self.backBtn.setEnabled(True)
             self.forwardBtn.setEnabled(True)
-
 
     # Функция запуска и паузы видеоплеера
     def play_video(self):
@@ -446,11 +437,10 @@ class FirstWindow(QWidget):
         self.mediaPlayer.setPosition(pos)
 
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = FirstWindow()
     print("--- {} секунд ---".format(time.time() - start_time))
     window.show()
     sys.exit(app.exec_())
-# основное окно готово !!;)
+    # основное окно готово !!;)
