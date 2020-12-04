@@ -2,6 +2,8 @@ import sys, os
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
+import pillow_file
+
 
 
 class ImageLabel(QLabel):
@@ -24,7 +26,7 @@ class ImageLabel(QLabel):
 class AppDemo(QWidget):
     def __init__(self):
         super().__init__()
-        self.resize(400, 400)
+        self.setFixedSize(720, 480)
         self.setWindowTitle('Image Area')
         self.setWindowIcon(QIcon(r'ico/L.png'))
         self.setStyleSheet('background-color: #3C3F41')
@@ -53,7 +55,7 @@ class AppDemo(QWidget):
         if event.mimeData().hasImage:
             event.setDropAction(Qt.CopyAction)
             file_path = event.mimeData().urls()[0].toLocalFile()
-            self.set_image(file_path)
+            self.set_image(pillow_file.image_size_fix(file_path))
 
             event.accept()
         else:
