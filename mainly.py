@@ -2,12 +2,14 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QSlider, QFileDialog,)
 import sys
 from second_main import AppDemo
+from settings import SettingsWindow
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
 import keyboard
 import time
+import os
 
 
 # полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5 и его классы и также модуль : sys, time, keyboard
@@ -15,6 +17,13 @@ import time
 start_time = time.time()
 # также я добавил таймер для того чтобы знать сколько выполняется скрипт
 # (если запустить код пару раз то время будет отображаться корректне)
+
+
+def resource_path(relative):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative)
+    else:
+        return os.path.join(os.path.abspath("."), relative)
 
 
 class FirstWindow(QWidget):
@@ -33,7 +42,7 @@ class FirstWindow(QWidget):
         super().__init__()
         self.setWindowTitle('v_|0.0.1|')
         self.setGeometry(350, 200, 1280, 666)
-        self.setWindowIcon(QIcon(r'ico\L.png'))
+        self.setWindowIcon(QIcon(resource_path(r'ico\L.ico')))
         self.setStyleSheet("background-color: #F0F0F0;")
 
         self.setMouseTracking(True)
@@ -42,15 +51,20 @@ class FirstWindow(QWidget):
         self.init_handlers()
 
     def init_handlers(self):
-        self.btn1.clicked.connect(self.settings_window)
+        self.btn1.clicked.connect(self.image_window)
+        self.btn2.clicked.connect(self.setting_window)
 
-    def settings_window(self):
+    def image_window(self):
         self.w2 = AppDemo()
         self.w2.show()
 
+    def setting_window(self):
+        self.w3 = SettingsWindow()
+        self.w3.show()
+
     def event(self, e):
-        '''Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
-        над процессом показа виде (изменения громкости , перемотка и остановка'''
+        ''' Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
+        над процессом показа виде (изменения громкости , перемотка и остановка '''
         if e.type() == QEvent.MouseButtonDblClick:
             self.fullscreen()
         elif e.type() == QEvent.Wheel:
@@ -124,7 +138,7 @@ class FirstWindow(QWidget):
         # создание button(кнопки открыть)
         openBtn = QPushButton()
         openBtn.setStyleSheet(config)
-        openBtn.setIcon(QIcon(r'ico\folders.png'))
+        openBtn.setIcon(QIcon(resource_path(r'ico\folders.png')))
         openBtn.setIconSize(QSize(20, 20))
         openBtn.clicked.connect(self.open_file)
         openBtn.setToolTip('Открытие папок для просмотра файлов')
@@ -135,14 +149,14 @@ class FirstWindow(QWidget):
         self.playBtn.setEnabled(False)
         self.playBtn.setFlat(True)
         self.playBtn.setStyleSheet(config)
-        self.playBtn.setIcon(QIcon(r'ico\play.png'))
+        self.playBtn.setIcon(QIcon(resource_path(r'ico\play.png')))
         self.playBtn.setIconSize(QSize(40, 40))
         self.playBtn.clicked.connect(self.play_video)
 
         # создание button(кнопки для перемотки вперед)
         self.forwardBtn = QPushButton()
         self.forwardBtn.setEnabled(False)
-        self.forwardBtn.setIcon(QIcon(r'ico\forward.png'))
+        self.forwardBtn.setIcon(QIcon(resource_path(r'ico\forward.png')))
         self.forwardBtn.setStyleSheet(config)
         self.forwardBtn.setIconSize(QSize(20, 20))
         self.forwardBtn.clicked.connect(self.forward)
@@ -150,7 +164,7 @@ class FirstWindow(QWidget):
         # создание button (для перемотки назад)
         self.backBtn = QPushButton()
         self.backBtn.setEnabled(False)
-        self.backBtn.setIcon(QIcon(r'ico\backward .png'))
+        self.backBtn.setIcon(QIcon(resource_path(r'ico\backward .png')))
         self.backBtn.setStyleSheet(config)
         self.backBtn.setIconSize(QSize(20, 20))
         self.backBtn.clicked.connect(self.backward)
@@ -158,7 +172,7 @@ class FirstWindow(QWidget):
         # для volume(громкости)
         self.nextBtn = QPushButton()
         self.nextBtn.setObjectName('volume_btn')
-        self.nextBtn.setIcon(QIcon(r'ico\volume1.png'))
+        self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
         self.nextBtn.setStyleSheet(config)
         self.nextBtn.setIconSize(QSize(17, 17))
         self.nextBtn.clicked.connect(self.volume)
@@ -167,7 +181,7 @@ class FirstWindow(QWidget):
         self.one_moreBtn = QPushButton()
         self.one_moreBtn.setObjectName('fullscreen')
         self.one_moreBtn.setStyleSheet(config)
-        self.one_moreBtn.setIcon(QIcon(r'ico\fullscreen.png'))
+        self.one_moreBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
         self.one_moreBtn.setIconSize(QSize(19, 19))
         self.one_moreBtn.clicked.connect(self.fullscreen)
         self.one_moreBtn.setToolTip('Переключить на полноэкранный размер')
@@ -177,15 +191,18 @@ class FirstWindow(QWidget):
 
         # создание button (для окна настроек)
         self.btn1 = QPushButton()
-        self.btn1.setIcon(QIcon(r'ico\photo.png'))
-        self.one_moreBtn.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
+        self.btn1.setIcon(QIcon(resource_path(r'ico\photo.png')))
+        self.btn1.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
         self.btn1.setIconSize((QSize(18, 18)))
         self.btn1.setEnabled(True)
         self.btn1.setStyleSheet(config)
 
         self.btn2 = QPushButton()
-        self.btn2.setEnabled(False)
-        self.btn2.setStyleSheet(conf_for_blank)
+        self.btn2.setIcon(QIcon(resource_path(r'ico\setting.png')))
+        self.btn2.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
+        self.btn2.setIconSize((QSize(18, 18)))
+        self.btn2.setEnabled(True)
+        self.btn2.setStyleSheet(config)
 # --------------------------------------- #
 
         # создание slider'а
@@ -332,31 +349,34 @@ class FirstWindow(QWidget):
             self.showMaximized()
             self.one_moreBtn.setObjectName('normal_screen')
             self.one_moreBtn.setToolTip('Возвращения окна стандартного режима')
-            self.one_moreBtn.setIcon(QIcon(r'ico\norm_screen.png'))
-        elif self.one_moreBtn.objectName() == 'normal_screen':
+            self.one_moreBtn.setIcon(QIcon(resource_path(r'ico\norm_screen.png')))
+        #elif self.one_moreBtn.objectName() == 'normal_screen':
+        else:
             self.one_moreBtn.setObjectName('fullscreen')
-            self.one_moreBtn.setIcon(QIcon(r'ico\fullscreen.png'))
+            self.one_moreBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
             self.one_moreBtn.setToolTip('Переключить на полноэкранный размер')
             self.showNormal()
+
+
 
     # Функия для кнопки громкости (проявляет слайдер)
     def volume(self):
         if self.nextBtn.objectName() == 'volume_btn':
             self.mediaPlayer.setMuted(True)
             self.nextBtn.setObjectName('btn')
-            self.nextBtn.setIcon(QIcon(r'ico\vol_muted.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
         else:
             self.nextBtn.setObjectName('volume_btn')
             self.mediaPlayer.setMuted(False)
-            self.nextBtn.setIcon(QIcon(r'ico\volume1.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
 
 
     # Проверка громкости
     def volume_check(self):
         if self.mediaPlayer.volume() == 0:
-            self.nextBtn.setIcon(QIcon(r'ico\vol_muted.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
         if self.mediaPlayer.isMuted() == True:
-            self.nextBtn.setIcon(QIcon(r'ico\vol_muted.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
 
     # Функция для снижения громкости
     def min_volume(self):
@@ -367,9 +387,9 @@ class FirstWindow(QWidget):
         volume_state = min(volume_state - 5, self.hslider.sliderPosition())
         self.hslider.setSliderPosition(volume_state)
         if self.mediaPlayer.volume() == 0 or self.mediaPlayer.isMuted():
-            self.nextBtn.setIcon(QIcon(r'ico\vol_muted.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
         else:
-            self.nextBtn.setIcon(QIcon(r'ico\volume1.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
 
     # Функция для увелечения громкости
     def plus_volume(self):
@@ -383,10 +403,10 @@ class FirstWindow(QWidget):
     # Функция которая меняет состояние кнопок
     def mediastate_changed(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
-            self.playBtn.setIcon(QIcon(r'ico\pause.png'))
+            self.playBtn.setIcon(QIcon(resource_path(r'ico\pause.png')))
             self.playBtn.setIconSize(QSize(40, 40))
         else:
-            self.playBtn.setIcon(QIcon(r'ico\play.png'))
+            self.playBtn.setIcon(QIcon(resource_path(r'ico\play.png')))
             self.playBtn.setIconSize(QSize(40, 40))
 
     # Функция которая отвечает за перемотку с помощью слайдера и которая выводит прошедшее время с начала записи
@@ -404,7 +424,7 @@ class FirstWindow(QWidget):
     def set_position(self, position):
         self.mediaPlayer.setPosition(position)
 
-    # Обработчик ощибки
+    # Обработчик ошибки
     def handle_errors(self):
         self.playBtn.setEnabled(False)
 
@@ -420,9 +440,9 @@ class FirstWindow(QWidget):
     def set_volume_position(self, position):
         self.mediaPlayer.setVolume(position)
         if self.mediaPlayer.volume() == 0 or self.mediaPlayer.isMuted():
-            self.nextBtn.setIcon(QIcon(r'ico\vol_muted.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
         elif self.mediaPlayer.volume() != 0 or self.mediaPlayer.isMuted() == False:
-            self.nextBtn.setIcon(QIcon(r'ico\volume1.png'))
+            self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
 
     # перемотка назад на 10сек
     def go_back(self):
