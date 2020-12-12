@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
 import sys
 from second_main import AppDemo
 # from settings import SettingsWindow
+from for_example import Switch
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
@@ -193,13 +194,9 @@ class FirstWindow(QWidget):
         self.imageBtn.setEnabled(True)
         self.imageBtn.setStyleSheet(config)
 
-        self.themeBtn = QPushButton()
+        self.themeBtn = Switch(thumb_radius=11, track_radius=8)
         self.themeBtn.setObjectName('default')
-        self.themeBtn.setIcon(QIcon(resource_path(r'ico\dark_mode.png')))
         self.themeBtn.setToolTip('Изменить задний фон')
-        self.themeBtn.setIconSize((QSize(18, 18)))
-        self.themeBtn.setEnabled(True)
-        self.themeBtn.setStyleSheet(config)
         self.themeBtn.clicked.connect(self.change_to_dark_theme)
 # --------------------------------------- #
 
@@ -343,6 +340,7 @@ class FirstWindow(QWidget):
 
     def change_to_dark_theme(self):
         dark = '#3C3F41'
+        # dark = '#0D1117'
         new_dark_config = '''
         QPushButton{
             border: none;
