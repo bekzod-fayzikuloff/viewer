@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
-                             QVBoxLayout, QLabel, QSlider, QFileDialog,)
+                             QVBoxLayout, QLabel, QSlider, QFileDialog, QDialog)
 import sys
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
@@ -35,7 +35,7 @@ class SettingsWindow(QWidget):
         self.darkBtn.clicked.connect(self.change_to_dark)
 
         self.whiteBnt = QPushButton('do white')
-        self.whiteBnt.clicked.connect(self.chage_to_white)
+        self.whiteBnt.clicked.connect(self.change_to_white)
 
         hbox = QHBoxLayout()
 
@@ -48,6 +48,6 @@ class SettingsWindow(QWidget):
         dark_theme ='#3C3F41'
         self.setStyleSheet('QWidget {background: %s;}' % dark_theme)
 
-    def chage_to_white(self):
+    def change_to_white(self):
         white_theme = '#EDEDED'
         self.setStyleSheet('QWidget {background: %s;}' % white_theme)

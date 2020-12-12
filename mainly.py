@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QSlider, QFileDialog,)
 import sys
 from second_main import AppDemo
-from settings import SettingsWindow
+# from settings import SettingsWindow
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
@@ -12,7 +12,8 @@ import time
 import os
 
 
-# полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5 и его классы и также модуль : sys, time, keyboard
+# полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5
+# и его классы и также модуль : sys, time, keyboard
 # _____________________________#
 start_time = time.time()
 # также я добавил таймер для того чтобы знать сколько выполняется скрипт
@@ -36,7 +37,7 @@ class FirstWindow(QWidget):
     '''
 
     def __init__(self):
-        '''Инициализируем Класс нашего главного окна и в нем прописывем основные характеристики нашего окна (размер , цвет , "тайтл" и вызывает методы
+        ''' Инициализируем Класс нашего главного окна и в нем прописывем основные характеристики нашего окна (размер , цвет , "тайтл" и вызывает методы
          в которых отслеживаются события(перемещение мыши) и прописан внешний вид интерфейса '''
 
         super().__init__()
@@ -51,16 +52,11 @@ class FirstWindow(QWidget):
         self.init_handlers()
 
     def init_handlers(self):
-        self.btn1.clicked.connect(self.image_window)
-        self.btn2.clicked.connect(self.setting_window)
+        self.imageBtn.clicked.connect(self.image_window)
 
     def image_window(self):
         self.w2 = AppDemo()
         self.w2.show()
-
-    def setting_window(self):
-        self.w3 = SettingsWindow()
-        self.w3.show()
 
     def event(self, e):
         ''' Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
@@ -170,39 +166,41 @@ class FirstWindow(QWidget):
         self.backBtn.clicked.connect(self.backward)
 
         # для volume(громкости)
-        self.nextBtn = QPushButton()
-        self.nextBtn.setObjectName('volume_btn')
-        self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
-        self.nextBtn.setStyleSheet(config)
-        self.nextBtn.setIconSize(QSize(17, 17))
-        self.nextBtn.clicked.connect(self.volume)
+        self.volumeBtn = QPushButton()
+        self.volumeBtn.setObjectName('volume_btn')
+        self.volumeBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
+        self.volumeBtn.setStyleSheet(config)
+        self.volumeBtn.setIconSize(QSize(17, 17))
+        self.volumeBtn.clicked.connect(self.volume)
 
         # настройка button(кнопок)
-        self.one_moreBtn = QPushButton()
-        self.one_moreBtn.setObjectName('fullscreen')
-        self.one_moreBtn.setStyleSheet(config)
-        self.one_moreBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
-        self.one_moreBtn.setIconSize(QSize(19, 19))
-        self.one_moreBtn.clicked.connect(self.fullscreen)
-        self.one_moreBtn.setToolTip('Переключить на полноэкранный размер')
-        self.one_moreBtn.setToolTipDuration(2500)
+        self.screenBtn = QPushButton()
+        self.screenBtn.setObjectName('fullscreen')
+        self.screenBtn.setStyleSheet(config)
+        self.screenBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
+        self.screenBtn.setIconSize(QSize(19, 19))
+        self.screenBtn.clicked.connect(self.fullscreen)
+        self.screenBtn.setToolTip('Переключить на полноэкранный размер')
+        self.screenBtn.setToolTipDuration(2500)
 
 # ----- кнопки для пустых мест ----- #
 
         # создание button (для окна настроек)
-        self.btn1 = QPushButton()
-        self.btn1.setIcon(QIcon(resource_path(r'ico\photo.png')))
-        self.btn1.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
-        self.btn1.setIconSize((QSize(18, 18)))
-        self.btn1.setEnabled(True)
-        self.btn1.setStyleSheet(config)
+        self.imageBtn = QPushButton()
+        self.imageBtn.setIcon(QIcon(resource_path(r'ico\photo.png')))
+        self.imageBtn.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
+        self.imageBtn.setIconSize((QSize(18, 18)))
+        self.imageBtn.setEnabled(True)
+        self.imageBtn.setStyleSheet(config)
 
-        self.btn2 = QPushButton()
-        self.btn2.setIcon(QIcon(resource_path(r'ico\setting.png')))
-        self.btn2.setToolTip('Открывает второе окно которое позволяет взимодействовать с изображениями')
-        self.btn2.setIconSize((QSize(18, 18)))
-        self.btn2.setEnabled(True)
-        self.btn2.setStyleSheet(config)
+        self.themeBtn = QPushButton()
+        self.themeBtn.setObjectName('default')
+        self.themeBtn.setIcon(QIcon(resource_path(r'ico\dark_mode.png')))
+        self.themeBtn.setToolTip('Изменить задний фон')
+        self.themeBtn.setIconSize((QSize(18, 18)))
+        self.themeBtn.setEnabled(True)
+        self.themeBtn.setStyleSheet(config)
+        self.themeBtn.clicked.connect(self.change_to_dark_theme)
 # --------------------------------------- #
 
         # создание slider'а
@@ -239,17 +237,17 @@ class FirstWindow(QWidget):
         hboxLayout2.addWidget(self.label1)
         hboxLayout2.addWidget(self.label2)
         hboxLayout2.addWidget(self.slider)
-        hboxLayout2.addWidget(self.nextBtn)
+        hboxLayout2.addWidget(self.volumeBtn)
         hboxLayout2.addWidget(self.hslider)
 
         # добавления виджетов в hbox layout
-        hboxLayout.addWidget(self.btn2)
+        hboxLayout.addWidget(self.themeBtn)
         hboxLayout.addWidget(openBtn)
         hboxLayout.addWidget(self.backBtn)
         hboxLayout.addWidget(self.playBtn)
         hboxLayout.addWidget(self.forwardBtn)
-        hboxLayout.addWidget(self.one_moreBtn)
-        hboxLayout.addWidget(self.btn1)
+        hboxLayout.addWidget(self.screenBtn)
+        hboxLayout.addWidget(self.imageBtn)
 
         vboxLayout = QVBoxLayout()
         vboxLayout.addWidget(videowidget)
@@ -316,67 +314,120 @@ class FirstWindow(QWidget):
         self.label1.hide()
         self.label2.hide()
         self.slider.hide()
-        self.nextBtn.hide()
+        self.volumeBtn.hide()
         self.hslider.hide()
         # Сокрытие нижнего слоя Layout'a
         openBtn.hide()
-        self.btn1.hide()
+        self.imageBtn.hide()
         self.backBtn.hide()
         self.playBtn.hide()
         self.forwardBtn.hide()
-        self.one_moreBtn.hide()
-        self.btn2.hide()
+        self.screenBtn.hide()
+        self.themeBtn.hide()
 
     def blef_win_on(self):
         # 'Показать' верний слой Layout'a
         self.label1.setVisible(True)
         self.label2.setVisible(True)
         self.slider.setVisible(True)
-        self.nextBtn.setVisible(True)
+        self.volumeBtn.setVisible(True)
         self.hslider.setVisible(True)
         # 'Показать' нижний слой Layout'a
         openBtn.setVisible(True)
-        self.btn1.setVisible(True)
+        self.imageBtn.setVisible(True)
         self.backBtn.setVisible(True)
         self.playBtn.setVisible(True)
         self.forwardBtn.setVisible(True)
-        self.one_moreBtn.setVisible(True)
-        self.btn2.setVisible(True)
+        self.screenBtn.setVisible(True)
+        self.themeBtn.setVisible(True)
+
+    def change_to_dark_theme(self):
+        dark = '#3C3F41'
+        new_dark_config = '''
+        QPushButton{
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            background-color: %s;
+        }
+        QPushButton:hover{
+            background-color: #B4B4B4 ;
+            border-radius:7px;
+            width: 30px;
+        }
+        ''' % dark
+
+        config = '''QPushButton{
+        border: none;
+        margin: 0px;
+        padding: 0px;
+        background-color:#F0F0F0;
+        }
+        QPushButton:hover{
+        background-color: #B4B4B4;
+        border-radius:7px;
+        width: 30px;
+        }
+        '''
+
+        if self.themeBtn.objectName() == 'default':
+            self.setStyleSheet(f"background-color: {dark};")
+            self.imageBtn.setStyleSheet(new_dark_config)
+            self.themeBtn.setStyleSheet(new_dark_config)
+            self.themeBtn.setIcon(QIcon(resource_path(r'ico/default.png')))
+            self.themeBtn.setIconSize((QSize(18, 18)))
+            self.screenBtn.setStyleSheet(new_dark_config)
+            self.playBtn.setStyleSheet(new_dark_config)
+            self.backBtn.setStyleSheet(new_dark_config)
+            self.forwardBtn.setStyleSheet(new_dark_config)
+            self.volumeBtn.setStyleSheet(new_dark_config)
+            openBtn.setStyleSheet(new_dark_config)
+            self.themeBtn.setObjectName('dark')
+        else:
+            self.setStyleSheet(f"background-color: #F0F0F0;")
+            self.imageBtn.setStyleSheet(config)
+            self.themeBtn.setStyleSheet(config)
+            self.themeBtn.setIcon(QIcon(resource_path(r'ico/dark_mode.png')))
+            self.themeBtn.setIconSize((QSize(18, 18)))
+            self.screenBtn.setStyleSheet(config)
+            self.playBtn.setStyleSheet(config)
+            self.backBtn.setStyleSheet(config)
+            self.forwardBtn.setStyleSheet(config)
+            self.volumeBtn.setStyleSheet(config)
+            openBtn.setStyleSheet(config)
+            self.themeBtn.setObjectName('default')
 
     # Функия для полноэкранного режима
     def fullscreen(self):
-        if self.one_moreBtn.objectName() == 'fullscreen':
+        if self.screenBtn.objectName() == 'fullscreen':
             self.showMaximized()
-            self.one_moreBtn.setObjectName('normal_screen')
-            self.one_moreBtn.setToolTip('Возвращения окна стандартного режима')
-            self.one_moreBtn.setIcon(QIcon(resource_path(r'ico\norm_screen.png')))
-        #elif self.one_moreBtn.objectName() == 'normal_screen':
+            self.screenBtn.setObjectName('normal_screen')
+            self.screenBtn.setToolTip('Возвращения окна стандартного режима')
+            self.screenBtn.setIcon(QIcon(resource_path(r'ico\norm_screen.png')))
+        # elif self.one_moreBtn.objectName() == 'normal_screen':
         else:
-            self.one_moreBtn.setObjectName('fullscreen')
-            self.one_moreBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
-            self.one_moreBtn.setToolTip('Переключить на полноэкранный размер')
+            self.screenBtn.setObjectName('fullscreen')
+            self.screenBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
+            self.screenBtn.setToolTip('Переключить на полноэкранный размер')
             self.showNormal()
-
-
 
     # Функия для кнопки громкости (проявляет слайдер)
     def volume(self):
-        if self.nextBtn.objectName() == 'volume_btn':
+        if self.volumeBtn.objectName() == 'volume_btn':
             self.mediaPlayer.setMuted(True)
-            self.nextBtn.setObjectName('btn')
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
+            self.volumeBtn.setObjectName('btn')
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
         else:
-            self.nextBtn.setObjectName('volume_btn')
+            self.volumeBtn.setObjectName('volume_btn')
             self.mediaPlayer.setMuted(False)
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
-
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
 
     # Проверка громкости
     def volume_check(self):
         if self.mediaPlayer.volume() == 0:
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
-        if self.mediaPlayer.isMuted() == True:
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
+        if self.mediaPlayer.isMuted():
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
 
     # Функция для снижения громкости
     def min_volume(self):
@@ -387,9 +438,9 @@ class FirstWindow(QWidget):
         volume_state = min(volume_state - 5, self.hslider.sliderPosition())
         self.hslider.setSliderPosition(volume_state)
         if self.mediaPlayer.volume() == 0 or self.mediaPlayer.isMuted():
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
         else:
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
 
     # Функция для увелечения громкости
     def plus_volume(self):
@@ -440,9 +491,9 @@ class FirstWindow(QWidget):
     def set_volume_position(self, position):
         self.mediaPlayer.setVolume(position)
         if self.mediaPlayer.volume() == 0 or self.mediaPlayer.isMuted():
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
-        elif self.mediaPlayer.volume() != 0 or self.mediaPlayer.isMuted() == False:
-            self.nextBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\vol_muted.png')))
+        elif self.mediaPlayer.volume() != 0 or self.mediaPlayer.isMuted():
+            self.volumeBtn.setIcon(QIcon(resource_path(r'ico\volume1.png')))
 
     # перемотка назад на 10сек
     def go_back(self):
