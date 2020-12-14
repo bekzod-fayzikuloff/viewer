@@ -1,14 +1,12 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
-                             QVBoxLayout, QLabel, QSlider, QFileDialog,)
+                             QVBoxLayout, QLabel, QSlider, QFileDialog, QShortcut)
 import sys
 from second_main import AppDemo
-# from settings import SettingsWindow
 from for_example import Switch
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtGui import QIcon, QPalette, QColor, QFont
+from PyQt5.QtGui import QIcon, QFont, QKeySequence
 from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
-import keyboard
 import time
 import os
 
@@ -73,8 +71,7 @@ class FirstWindow(QWidget):
                 self.plus_volume()
             if e.key() == Qt.Key_VolumeDown:
                 self.min_volume()
-            if e.key() == Qt.Key_0:
-                self.blef_win_on()
+
         elif e.type() == QEvent.MouseButtonPress:
             if e.buttons() & Qt.LeftButton:
                 self.play_video()
@@ -131,6 +128,7 @@ class FirstWindow(QWidget):
 
         # создание экземпляра(объекта) класса QVideoWidget()
         videowidget = QVideoWidget()
+        videowidget.setStyleSheet('background-color: #B4B4B4;')
 
         # создание button(кнопки открыть)
         openBtn = QPushButton()
@@ -156,7 +154,7 @@ class FirstWindow(QWidget):
         self.forwardBtn.setIcon(QIcon(resource_path(r'ico\forward.png')))
         self.forwardBtn.setStyleSheet(config)
         self.forwardBtn.setIconSize(QSize(20, 20))
-        self.forwardBtn.clicked.connect(self.forward)
+        self.forwardBtn.clicked.connect(self.go_forward)
 
         # создание button (для перемотки назад)
         self.backBtn = QPushButton()
@@ -164,7 +162,7 @@ class FirstWindow(QWidget):
         self.backBtn.setIcon(QIcon(resource_path(r'ico\backward .png')))
         self.backBtn.setStyleSheet(config)
         self.backBtn.setIconSize(QSize(20, 20))
-        self.backBtn.clicked.connect(self.backward)
+        self.backBtn.clicked.connect(self.go_back)
 
         # для volume(громкости)
         self.volumeBtn = QPushButton()
@@ -198,6 +196,11 @@ class FirstWindow(QWidget):
         self.themeBtn.setObjectName('default')
         self.themeBtn.setToolTip('Изменить задний фон')
         self.themeBtn.clicked.connect(self.change_to_dark_theme)
+
+        self.blankBtn = QPushButton()
+        self.blankBtn.setEnabled(False)
+        self.blankBtn.setStyleSheet(conf_for_blank)
+
 # --------------------------------------- #
 
         # создание slider'а
@@ -239,12 +242,13 @@ class FirstWindow(QWidget):
 
         # добавления виджетов в hbox layout
         hboxLayout.addWidget(self.themeBtn)
+        hboxLayout.addWidget(self.blankBtn)
         hboxLayout.addWidget(openBtn)
         hboxLayout.addWidget(self.backBtn)
         hboxLayout.addWidget(self.playBtn)
         hboxLayout.addWidget(self.forwardBtn)
-        hboxLayout.addWidget(self.screenBtn)
         hboxLayout.addWidget(self.imageBtn)
+        hboxLayout.addWidget(self.screenBtn)
 
         vboxLayout = QVBoxLayout()
         vboxLayout.addWidget(videowidget)
@@ -263,13 +267,17 @@ class FirstWindow(QWidget):
         self.mediaPlayer.durationChanged.connect(self.duration_volume)
 
         # Несколько функций которые вызываются во время взаимодействия с клавишами для удобства
-        try:
-            keyboard.add_hotkey('up', self.plus_volume)
-            keyboard.add_hotkey('down', self.min_volume)
-            keyboard.add_hotkey('left', self.go_back)
-            keyboard.add_hotkey('right', self.go_forward)
-        except:
-            pass
+        self.volumeMinSc = QShortcut(QKeySequence('Down'), self)
+        self.volumeMinSc.activated.connect(self.min_volume)
+
+        self.volumePlusSc = QShortcut(QKeySequence('Up'), self)
+        self.volumePlusSc.activated.connect(self.plus_volume)
+
+        self.forwardSc = QShortcut(QKeySequence('Right'), self)
+        self.forwardSc.activated.connect(self.go_forward_with_key)
+
+        self.backSc = QShortcut(QKeySequence('Left'), self)
+        self.backSc.activated.connect(self.go_back_with_key)
 
     # Функция открытия файла
     def open_file(self):
@@ -298,13 +306,6 @@ class FirstWindow(QWidget):
         pos = max(pos + 1000, pos)
         self.mediaPlayer.setPosition(pos)
 
-    # Пустая функция для кнопки вперед
-    def forward(self):
-        self.go_forward_with_key()
-
-    # Пустая функция для кнопки назад
-    def backward(self):
-        self.go_back_with_key()
 
     def blef_win(self):
         # Сокрытие вернего слоя Layout'a
@@ -339,8 +340,8 @@ class FirstWindow(QWidget):
         self.themeBtn.setVisible(True)
 
     def change_to_dark_theme(self):
-        dark = '#3C3F41'
-        # dark = '#0D1117'
+        # dark = '#3C3F41'
+        dark = '#0D1117'
         new_dark_config = '''
         QPushButton{
             border: none;
@@ -379,6 +380,7 @@ class FirstWindow(QWidget):
             self.backBtn.setStyleSheet(new_dark_config)
             self.forwardBtn.setStyleSheet(new_dark_config)
             self.volumeBtn.setStyleSheet(new_dark_config)
+            self.blankBtn.setStyleSheet(new_dark_config)
             openBtn.setStyleSheet(new_dark_config)
             self.themeBtn.setObjectName('dark')
         else:
@@ -392,6 +394,7 @@ class FirstWindow(QWidget):
             self.backBtn.setStyleSheet(config)
             self.forwardBtn.setStyleSheet(config)
             self.volumeBtn.setStyleSheet(config)
+            self.blankBtn.setStyleSheet(config)
             openBtn.setStyleSheet(config)
             self.themeBtn.setObjectName('default')
 
