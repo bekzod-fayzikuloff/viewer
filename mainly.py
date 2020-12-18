@@ -48,14 +48,6 @@ class FirstWindow(QWidget):
         self.setMouseTracking(True)
         self.setCursor(Qt.PointingHandCursor)
         self.init_ui()
-        self.init_handlers()
-
-    def init_handlers(self):
-        self.imageBtn.clicked.connect(self.image_window)
-
-    def image_window(self):
-        self.w2 = AppDemo()
-        self.w2.show()
 
     def event(self, e):
         ''' Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
@@ -191,6 +183,7 @@ class FirstWindow(QWidget):
         self.imageBtn.setIconSize((QSize(18, 18)))
         self.imageBtn.setEnabled(True)
         self.imageBtn.setStyleSheet(config)
+        self.imageBtn.clicked.connect(self.buttonHandler)
 
         self.themeBtn = Switch(thumb_radius=11, track_radius=8)
         self.themeBtn.setObjectName('default')
@@ -340,7 +333,14 @@ class FirstWindow(QWidget):
         self.themeBtn.setVisible(True)
 
     def change_to_dark_theme(self):
-        # dark = '#3C3F41'
+        new_dark_gardient = '''
+        QWidget{
+            background: #3E52BD;
+            background: -webkit-linear-gradient(top left, #3E52BD, #A35C35);
+            background: -moz-linear-gradient(top left, #3E52BD, #A35C35);
+            background: linear-gradient(to bottom right, #3E52BD, #A35C35);
+        }
+        '''
         dark = '#0D1117'
         new_dark_config = '''
         QPushButton{
@@ -507,6 +507,12 @@ class FirstWindow(QWidget):
         pos = self.mediaPlayer.position()
         pos = max(pos + 10000, pos)
         self.mediaPlayer.setPosition(pos)
+
+    def buttonHandler(self):
+        grab = self.grab()
+        filename = f"img-{time.strftime('%Y-%m-%d-%H-%M-%S')}"
+        grab.save(resource_path(f'screens/{filename}.png'), 'png')
+        #os.startfile(resource_path(f'screens/{filename}.png'))
 
 
 if __name__ == '__main__':
