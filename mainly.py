@@ -49,6 +49,7 @@ class FirstWindow(QWidget):
         self.setCursor(Qt.PointingHandCursor)
         self.init_ui()
         self.init_handlers()
+        self.setAcceptDrops(True)
 
     def init_handlers(self):  # обработка нажатия для октрытия 2 окна
         self.imageBtn.clicked.connect(self.show_window_2)
@@ -278,6 +279,31 @@ class FirstWindow(QWidget):
 
         self.backSc = QShortcut(QKeySequence('Left'), self)
         self.backSc.activated.connect(self.go_back_with_key)
+
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasImage:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasImage:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasImage:
+            event.setDropAction(Qt.CopyAction)
+            file_path = event.mimeData().urls()[0].toLocalFile()
+            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(file_path)))
+            self.playBtn.setEnabled(True)
+            self.backBtn.setEnabled(True)
+            self.forwardBtn.setEnabled(True)
+            event.accept()
+        else:
+            event.ignore()
 
     # Функция открытия файла
     def open_file(self):
