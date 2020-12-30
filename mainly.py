@@ -10,7 +10,6 @@ from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
 import time
 import os
 
-
 # полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5
 # и его классы и также модуль : sys, time, keyboard
 # _____________________________#
@@ -46,7 +45,7 @@ class FirstWindow(QWidget):
         self.setStyleSheet("background-color: #F0F0F0;")
 
         self.setMouseTracking(True)
-        self.setCursor(Qt.PointingHandCursor)
+        # self.setCursor(Qt.PointingHandCursor)
         self.init_ui()
         self.init_handlers()
         self.setAcceptDrops(True)
@@ -280,6 +279,8 @@ class FirstWindow(QWidget):
         self.backSc = QShortcut(QKeySequence('Left'), self)
         self.backSc.activated.connect(self.go_back_with_key)
 
+        self.fullscreenSc = QShortcut(QKeySequence('F'), self)
+        self.fullscreenSc.activated.connect(self.fullscreen)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasImage:
