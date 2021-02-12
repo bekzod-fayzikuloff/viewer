@@ -1,14 +1,17 @@
+import sys
+import time
+
+from elements.second_window import WindowForImage
+from elements.switch_button import Switch
+
+from config.settings import resource_path
+
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QSlider, QFileDialog, QShortcut)
-import sys
-from second_main import AppDemo
-from for_example import Switch
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QFont, QKeySequence
 from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
-import time
-import os
 
 # полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5
 # и его классы и также модуль : sys, time, keyboard
@@ -18,25 +21,21 @@ start_time = time.time()
 # (если запустить код пару раз то время будет отображаться корректне)
 
 
-def resource_path(relative):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative)
-    else:
-        return os.path.join(os.path.abspath("."), relative)
-
-
 class FirstWindow(QWidget):
-    '''
-       В этом классе описывается внешний вид, логика и функционал моего видеоплеера версии 0.01
+    """
+        В этом классе описывается внешний вид, логика и функционал моего видеоплеера версии 0.01
        постораюсь по мере возможности улучшать свой проект добавляя функционал и
        удобства , это \'документация\', надеюсь моя программа тебе
        понравится
        P.S знаю что много плохого кода. сорри
-    '''
+    """
 
     def __init__(self):
-        ''' Инициализируем Класс нашего главного окна и в нем прописывем основные характеристики нашего окна (размер , цвет , "тайтл" и вызывает методы
-         в которых отслеживаются события(перемещение мыши) и прописан внешний вид интерфейса '''
+        """
+        Инициализируем Класс нашего главного окна и в нем прописывем основные характеристики
+        нашего окна (размер , цвет , "тайтл" и вызывает методы в которых отслеживаются события(перемещение мыши)
+        и прописан внешний вид интерфейса
+        """
 
         super().__init__()
         self.setWindowTitle('v_|0.0.1|')
@@ -45,7 +44,7 @@ class FirstWindow(QWidget):
         self.setStyleSheet("background-color: #F0F0F0;")
 
         self.setMouseTracking(True)
-        # self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.PointingHandCursor)
         self.init_ui()
         self.init_handlers()
         self.setAcceptDrops(True)
@@ -54,14 +53,16 @@ class FirstWindow(QWidget):
         self.imageBtn.clicked.connect(self.show_window_2)
 
     def show_window_2(self):  # открытие 2  окна
-        self.w2 = AppDemo()
-        self.w2.show()
+        self.second_window = WindowForImage()
+        self.second_window.show()
 
     def event(self, e):
-        ''' Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
-        над процессом показа виде (изменения громкости , перемотка и остановка '''
+        """
+        Метод обработчик который фиксирует взаимодействия с клавиатурой и мышью для манипуляцией
+        над процессом показа виде (изменения громкости , перемотка и остановка
+        """
         if e.type() == QEvent.MouseButtonDblClick:
-            self.fullscreen()
+            self.full_screen()
         elif e.type() == QEvent.Wheel:
             pass
         elif e.type() == QEvent.KeyPress:
@@ -78,9 +79,11 @@ class FirstWindow(QWidget):
         return QWidget.event(self, e)
 
     def mouseMoveEvent(self, event):
-        '''Здесь я пытался реализовать обработчик , который показался мне интересным ,
-         во время воспроизведения видео если курсор мыши находится внутри "видеовиджета"
-         то ползунок громкости , продолжительности видео и кнопки громкости скроются '''
+        """
+        Здесь я пытался реализовать обработчик , который показался мне интересным ,
+        во время воспроизведения видео если курсор мыши находится внутри "видеовиджета"
+        то ползунок громкости , продолжительности видео и кнопки громкости скроются
+        """
         if self.isMaximized():
             if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
                 slider_y = (self.slider.pos().y() - 3)
@@ -178,7 +181,7 @@ class FirstWindow(QWidget):
         self.screenBtn.setStyleSheet(config)
         self.screenBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
         self.screenBtn.setIconSize(QSize(19, 19))
-        self.screenBtn.clicked.connect(self.fullscreen)
+        self.screenBtn.clicked.connect(self.full_screen)
         self.screenBtn.setToolTip('Переключить на полноэкранный размер')
         self.screenBtn.setToolTipDuration(2500)
 
@@ -280,7 +283,7 @@ class FirstWindow(QWidget):
         self.backSc.activated.connect(self.go_back_with_key)
 
         self.fullscreenSc = QShortcut(QKeySequence('F'), self)
-        self.fullscreenSc.activated.connect(self.fullscreen)
+        self.fullscreenSc.activated.connect(self.full_screen)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasImage:
@@ -309,6 +312,7 @@ class FirstWindow(QWidget):
     # Функция открытия файла
     def open_file(self):
         global filename
+
         filename, _ = QFileDialog.getOpenFileName(self)
         if filename != '':
             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(filename)))
@@ -423,8 +427,9 @@ class FirstWindow(QWidget):
             openBtn.setStyleSheet(config)
             self.themeBtn.setObjectName('default')
 
+
     # Функия для полноэкранного режима
-    def fullscreen(self):
+    def full_screen(self):
         if self.screenBtn.objectName() == 'fullscreen':
             self.showMaximized()
             self.screenBtn.setObjectName('normal_screen')
