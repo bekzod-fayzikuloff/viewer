@@ -1,1 +1,0 @@
-Video player with using PyQt5
