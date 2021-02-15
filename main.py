@@ -261,7 +261,7 @@ class FirstWindow(QWidget):
         self.mediaPlayer.setVideoOutput(videowidget)
 
         # обработчики медиа сигналов
-        self.mediaPlayer.stateChanged.connect(self.mediastate_changed)
+        self.mediaPlayer.stateChanged.connect(self.media_state_changed)
         self.mediaPlayer.positionChanged.connect(self.position_changed)
         self.mediaPlayer.durationChanged.connect(self.duration_changed)
 
@@ -481,7 +481,7 @@ class FirstWindow(QWidget):
         self.hslider.setSliderPosition(volume_state)
 
     # Функция которая меняет состояние кнопок
-    def mediastate_changed(self):
+    def media_state_changed(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
             self.playBtn.setIcon(QIcon(resource_path(r'ico\pause.png')))
             self.playBtn.setIconSize(QSize(40, 40))
