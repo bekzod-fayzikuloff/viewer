@@ -3,11 +3,12 @@ import time
 
 from elements.second_window import WindowForImage
 from elements.switch_button import Switch
+from elements.slider import MySlider
 
 from config.settings import resource_path
 
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
-                             QVBoxLayout, QLabel, QSlider, QFileDialog, QShortcut)
+                             QVBoxLayout, QLabel, QFileDialog, QShortcut)
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QFont, QKeySequence
@@ -99,23 +100,25 @@ class FirstWindow(QWidget):
                 self.blef_win_on()
 
     def init_ui(self):
-        conf_for_blank = '''QPushButton{
-        border: none;
-        margin: 0px;
-        padding: 0px;
-        background-color:#F0F0F0;
+        conf_for_blank = '''
+        QPushButton{
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            background-color:#F0F0F0;
         }
         '''
-        config = '''QPushButton{
-        border: none;
-        margin: 0px;
-        padding: 0px;
-        background-color:#F0F0F0;
+        config = '''
+        QPushButton{
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            background-color:#F0F0F0;
         }
         QPushButton:hover{
-        background-color: #B4B4B4;
-        border-radius:7px;
-        width: 30px;
+            background-color: #B4B4B4;
+            border-radius:7px;
+            width: 30px;
         }
         '''
 
@@ -184,7 +187,6 @@ class FirstWindow(QWidget):
         self.screenBtn.clicked.connect(self.full_screen)
         self.screenBtn.setToolTip('Переключить на полноэкранный размер')
         self.screenBtn.setToolTipDuration(2500)
-
 # ----- кнопки для пустых мест ----- #
 
         # создание button (для окна настроек)
@@ -203,17 +205,14 @@ class FirstWindow(QWidget):
         self.blankBtn = QPushButton()
         self.blankBtn.setEnabled(False)
         self.blankBtn.setStyleSheet(conf_for_blank)
-
 # --------------------------------------- #
 
         # создание slider'а
-        self.slider = QSlider(Qt.Horizontal)
-        self.slider.setRange(0, 0)
-        self.slider.setMaximumHeight(7)
+        self.slider = MySlider(orient=Qt.Horizontal)
         self.slider.sliderMoved.connect(self.set_position)
 
         # создания slider для volume
-        self.hslider = QSlider(Qt.Horizontal)
+        self.hslider = MySlider(orient=Qt.Horizontal)
         self.hslider.setRange(0, 100)
         self.hslider.setMaximumHeight(7)
         self.hslider.sliderMoved.connect(self.set_volume_position)
@@ -370,7 +369,7 @@ class FirstWindow(QWidget):
         self.themeBtn.setVisible(True)
 
     def change_to_dark_theme(self):
-        dark = '#0D1117'
+        dark = '#3C3F41'
         new_dark_config = '''
         QPushButton{
             border: none;
@@ -426,7 +425,6 @@ class FirstWindow(QWidget):
             self.blankBtn.setStyleSheet(config)
             openBtn.setStyleSheet(config)
             self.themeBtn.setObjectName('default')
-
 
     # Функия для полноэкранного режима
     def full_screen(self):

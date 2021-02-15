@@ -1,4 +1,4 @@
-from elements import pillow_file
+from . import pillow_file
 from config.settings import resource_path
 
 from PyQt5.QtCore import Qt
