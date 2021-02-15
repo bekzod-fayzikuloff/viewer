@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-from first import main
+import main
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -25,13 +25,40 @@ class ApplicationsTest(unittest.TestCase):
         self.assertEqual(test_window.acceptDrops(), True)
 
     def test_window_buttons_is_enabled(self):
-        self.assertEqual(
+        self.assertFalse(
             all([
                 test_window.playBtn.isEnabled(),
                 test_window.forwardBtn.isEnabled(),
                 test_window.backBtn.isEnabled(),
                 test_window.blankBtn.isEnabled(),
-                 ]), False)
+                 ])
+        )
+
+    def test_window_tool_tip(self):
+        self.assertEqual(test_window.screenBtn.toolTip(), 'Переключить на полноэкранный размер'),
+        self.assertEqual(
+            test_window.imageBtn.toolTip(), 'Открывает второе окно которое позволяет взимодействовать с изображениями'
+        )
+        self.assertEqual(test_window.themeBtn.toolTip(), 'Изменить задний фон'),
+        self.assertEqual(test_window.label1.toolTip(), 'Прошло времени'),
+        self.assertEqual(test_window.label2.toolTip(), 'Общая продолжительность')
+
+    def test_labels_text(self):
+        self.assertEqual(test_window.label1.text(), '0:00 /')
+        self.assertEqual(test_window.label2.text(), '0:00')
+
+    def test_window_size_change(self):
+        self.assertEqual(test_window.screenBtn.objectName(), 'fullscreen')
+        test_window.full_screen()
+        self.assertEqual(test_window.screenBtn.objectName(), 'normal_screen')
+        self.assertTrue(test_window.isMaximized())
+
+    def test_window_volume_function(self):
+        self.assertEqual(test_window.volumeBtn.objectName(), 'volume_btn')
+        self.assertFalse(test_window.mediaPlayer.isMuted())
+        test_window.volume()
+        self.assertEqual(test_window.volumeBtn.objectName(), 'btn')
+        self.assertTrue(test_window.mediaPlayer.isMuted())
 
 
 if __name__ == '__main__':

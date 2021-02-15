@@ -431,13 +431,12 @@ class FirstWindow(QWidget):
         if self.screenBtn.objectName() == 'fullscreen':
             self.showMaximized()
             self.screenBtn.setObjectName('normal_screen')
-            self.screenBtn.setToolTip('Возвращения окна стандартного режима')
+            # self.screenBtn.setToolTip('Возвращения окна стандартного режима')
             self.screenBtn.setIcon(QIcon(resource_path(r'ico\norm_screen.png')))
-        # elif self.one_moreBtn.objectName() == 'normal_screen':
         else:
             self.screenBtn.setObjectName('fullscreen')
             self.screenBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
-            self.screenBtn.setToolTip('Переключить на полноэкранный размер')
+            # self.screenBtn.setToolTip('Переключить на полноэкранный размер')
             self.showNormal()
 
     # Функия для кнопки громкости (проявляет слайдер)
