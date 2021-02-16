@@ -78,6 +78,10 @@ class ApplicationsTest(unittest.TestCase):
         test_window.change_to_dark_theme()
         self.assertEqual(test_window.styleSheet(), 'background-color: #3C3F41;')
 
+    def test_window_second_window(self):
+        test_window.imageBtn.click()
+        self.assertTrue(test_window.second_window.isEnabled())
+
 
 if __name__ == '__main__':
     unittest.main()

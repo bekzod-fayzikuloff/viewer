@@ -539,7 +539,6 @@ class FirstWindow(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = FirstWindow()
-    print(window.styleSheet())
     print("--- {} секунд ---".format(time.time() - start_time))
     window.show()
     sys.exit(app.exec_())
