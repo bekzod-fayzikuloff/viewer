@@ -1,6 +1,8 @@
 import sys
 import unittest
 
+from PyQt5.QtMultimedia import QMediaPlayer
+
 import main
 
 from PyQt5 import QtCore
@@ -59,6 +61,22 @@ class ApplicationsTest(unittest.TestCase):
         test_window.volume()
         self.assertEqual(test_window.volumeBtn.objectName(), 'btn')
         self.assertTrue(test_window.mediaPlayer.isMuted())
+
+    def test_window_positions_changing(self):
+        self.assertEqual(test_window.mediaPlayer.position(), 0)
+        test_window.go_forward()
+        self.assertEqual(test_window.mediaPlayer.position(), 10000)
+        test_window.go_back()
+        self.assertEqual(test_window.mediaPlayer.position(), 0)
+
+    def test_window_media_player_class(self):
+        test_class_ = QMediaPlayer()
+        self.assertEqual(type(test_class_), type(test_window.mediaPlayer))
+
+    def test_window_color(self):
+        self.assertEqual(test_window.styleSheet(), 'background-color: #F0F0F0;')
+        test_window.change_to_dark_theme()
+        self.assertEqual(test_window.styleSheet(), 'background-color: #3C3F41;')
 
 
 if __name__ == '__main__':
