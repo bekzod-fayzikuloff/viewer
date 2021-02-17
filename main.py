@@ -1,11 +1,12 @@
 import sys
 import time
 
-from elements.second_window import WindowForImage
-from elements.switch_button import Switch
-from elements.slider import MySlider
+from first.elements.second_window import WindowForImage
+from first.elements.switch_button import Switch
+from first.elements.slider import MySlider
+from first.elements.thread_example import MyThread
 
-from config.settings import resource_path
+from first.config.settings import resource_path
 
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QFileDialog, QShortcut)
@@ -17,6 +18,8 @@ from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
 # полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5
 # и его классы и также модуль : sys, time, keyboard
 # _____________________________#
+
+
 start_time = time.time()
 # также я добавил таймер для того чтобы знать сколько выполняется скрипт
 # (если запустить код пару раз то время будет отображаться корректне)
@@ -63,7 +66,7 @@ class FirstWindow(QWidget):
         над процессом показа виде (изменения громкости , перемотка и остановка
         """
         if e.type() == QEvent.MouseButtonDblClick:
-            self.full_screen()
+            pass
         elif e.type() == QEvent.Wheel:
             pass
         elif e.type() == QEvent.KeyPress:
@@ -89,15 +92,15 @@ class FirstWindow(QWidget):
             if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
                 slider_y = (self.slider.pos().y() - 3)
                 if event.pos().y() > slider_y:
-                    self.blef_win_on()
+                    self.blef_win_on_thread()
                 elif event.pos().y() < slider_y:
-                    self.blef_win()
+                    self.blef_win_thread()
             if self.mediaPlayer.state() == QMediaPlayer.PausedState:
-                self.blef_win_on()
+                self.blef_win_on_thread()
         else:
-            self.blef_win_on()
+            self.blef_win_on_thread()
             if self.hslider.isVisible():
-                self.blef_win_on()
+                self.blef_win_on_thread()
 
     def init_ui(self):
         conf_for_blank = '''
@@ -152,7 +155,7 @@ class FirstWindow(QWidget):
         self.playBtn.setStyleSheet(config)
         self.playBtn.setIcon(QIcon(resource_path(r'ico\play.png')))
         self.playBtn.setIconSize(QSize(40, 40))
-        self.playBtn.clicked.connect(self.play_video)
+        self.playBtn.clicked.connect(self.play_video_thread)
 
         # создание button(кнопки для перемотки вперед)
         self.forwardBtn = QPushButton()
@@ -184,7 +187,7 @@ class FirstWindow(QWidget):
         self.screenBtn.setStyleSheet(config)
         self.screenBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
         self.screenBtn.setIconSize(QSize(19, 19))
-        self.screenBtn.clicked.connect(self.full_screen)
+        self.screenBtn.clicked.connect(self.full_screen_thread)
         self.screenBtn.setToolTip('Переключить на полноэкранный размер')
         self.screenBtn.setToolTipDuration(2500)
 # ----- кнопки для пустых мест ----- #
@@ -200,7 +203,7 @@ class FirstWindow(QWidget):
         self.themeBtn = Switch(thumb_radius=11, track_radius=8)
         self.themeBtn.setObjectName('default')
         self.themeBtn.setToolTip('Изменить задний фон')
-        self.themeBtn.clicked.connect(self.change_to_dark_theme)
+        self.themeBtn.clicked.connect(self.theme_thread)
 
         self.blankBtn = QPushButton()
         self.blankBtn.setEnabled(False)
@@ -282,7 +285,7 @@ class FirstWindow(QWidget):
         self.backSc.activated.connect(self.go_back_with_key)
 
         self.fullscreenSc = QShortcut(QKeySequence('F'), self)
-        self.fullscreenSc.activated.connect(self.full_screen)
+        self.fullscreenSc.activated.connect(self.full_screen_thread)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasImage:
@@ -308,6 +311,10 @@ class FirstWindow(QWidget):
         else:
             event.ignore()
 
+    def open_file_thread(self):
+        thread = MyThread(self.open_file)
+        thread.run()
+
     # Функция открытия файла
     def open_file(self):
         global filename
@@ -319,7 +326,13 @@ class FirstWindow(QWidget):
             self.backBtn.setEnabled(True)
             self.forwardBtn.setEnabled(True)
 
+# --------------------------------------
     # Функция запуска и паузы видеоплеера
+
+    def play_video_thread(self):
+        thread = MyThread(self.play_video)
+        thread.run()
+
     def play_video(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
             self.mediaPlayer.pause()
@@ -335,6 +348,11 @@ class FirstWindow(QWidget):
         pos = self.mediaPlayer.position()
         pos = max(pos + 1000, pos)
         self.mediaPlayer.setPosition(pos)
+# --------------------------------------
+
+    def blef_win_thread(self):
+        thread = MyThread(self.blef_win)
+        thread.run()
 
     def blef_win(self):
         # Сокрытие вернего слоя Layout'a
@@ -352,6 +370,12 @@ class FirstWindow(QWidget):
         self.screenBtn.hide()
         self.themeBtn.hide()
 
+# --------------------------------------
+
+    def blef_win_on_thread(self):
+        thread = MyThread(self.blef_win_on)
+        thread.run()
+
     def blef_win_on(self):
         # 'Показать' верний слой Layout'a
         self.label1.setVisible(True)
@@ -367,6 +391,11 @@ class FirstWindow(QWidget):
         self.forwardBtn.setVisible(True)
         self.screenBtn.setVisible(True)
         self.themeBtn.setVisible(True)
+# --------------------------------------
+
+    def theme_thread(self):
+        thread = MyThread(self.change_to_dark_theme)
+        thread.run()
 
     def change_to_dark_theme(self):
         dark = '#3C3F41'
@@ -427,6 +456,11 @@ class FirstWindow(QWidget):
             self.themeBtn.setObjectName('default')
 
     # Функия для полноэкранного режима
+# --------------------------------------
+    def full_screen_thread(self):
+        thread = MyThread(self.full_screen)
+        thread.run()
+
     def full_screen(self):
         if self.screenBtn.objectName() == 'fullscreen':
             self.showMaximized()

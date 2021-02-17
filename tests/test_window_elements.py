@@ -45,5 +45,5 @@ class SliderElementTest(unittest.TestCase):
         self.assertEqual(SliderElementTest.test_slider_object.orientation(), QtCore.Qt.Horizontal)
 
 
-
-
+if __name__ == '__main__':
+    unittest.main()

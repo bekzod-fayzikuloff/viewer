@@ -1,9 +1,8 @@
 import sys
 import unittest
-import main
+from first import main
 
 from first.config.settings import resource_path
-from first.elements import second_window, slider, switch_button
 
 from PyQt5.QtMultimedia import QMediaPlayer
 
@@ -85,13 +84,13 @@ class ApplicationsTest(unittest.TestCase):
 class ConfigTest(unittest.TestCase):
 
     def test_resource_path(self):
-        self.assertEqual(resource_path(''), 'D:\\py\\viever\\first\\')
+        self.assertEqual(resource_path(''), 'D:\\py\\viever\\first\\first\\')
 
     def test_resource_path_to_ico(self):
-        self.assertEqual(resource_path('ico'), r'D:\py\viever\first\ico')
+        self.assertEqual(resource_path('ico'), r'D:\py\viever\first\first\ico')
 
     def test_resource_path_to_main(self):
-        self.assertEqual(resource_path('main.py'), r'D:\py\viever\first\main.py')
+        self.assertEqual(resource_path('main.py'), r'D:\py\viever\first\first\main.py')
 
 
 if __name__ == '__main__':
