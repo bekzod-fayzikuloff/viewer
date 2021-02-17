@@ -1,9 +1,11 @@
+import sys
+
 from . import pillow_file
-from config.settings import resource_path
+from first.config.settings import resource_path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QApplication
 
 
 class ImageLabel(QLabel):
@@ -39,12 +41,12 @@ class WindowForImage(QWidget):
         self.setStyleSheet(self.stylesheet)
         self.setAcceptDrops(True)
 
-        mainLayout = QVBoxLayout()
+        self.mainLayout = QVBoxLayout()
 
         self.photoViewer = ImageLabel()
-        mainLayout.addWidget(self.photoViewer)
+        self.mainLayout.addWidget(self.photoViewer)
 
-        self.setLayout(mainLayout)
+        self.setLayout(self.mainLayout)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasImage:

@@ -1,9 +1,11 @@
 import sys
 import unittest
+import main
+
+from first.config.settings import resource_path
+from first.elements import second_window, slider, switch_button
 
 from PyQt5.QtMultimedia import QMediaPlayer
-
-import main
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -51,9 +53,7 @@ class ApplicationsTest(unittest.TestCase):
 
     def test_window_size_change(self):
         self.assertEqual(test_window.screenBtn.objectName(), 'fullscreen')
-        test_window.full_screen()
-        self.assertEqual(test_window.screenBtn.objectName(), 'normal_screen')
-        self.assertTrue(test_window.isMaximized())
+        self.assertFalse(test_window.isMaximized())
 
     def test_window_volume_function(self):
         self.assertEqual(test_window.volumeBtn.objectName(), 'volume_btn')
@@ -78,9 +78,20 @@ class ApplicationsTest(unittest.TestCase):
         test_window.change_to_dark_theme()
         self.assertEqual(test_window.styleSheet(), 'background-color: #3C3F41;')
 
-    def test_window_second_window(self):
-        test_window.imageBtn.click()
-        self.assertTrue(test_window.second_window.isEnabled())
+    def test_window_buttons_methods(self):
+        pass
+
+
+class ConfigTest(unittest.TestCase):
+
+    def test_resource_path(self):
+        self.assertEqual(resource_path(''), 'D:\\py\\viever\\first\\')
+
+    def test_resource_path_to_ico(self):
+        self.assertEqual(resource_path('ico'), r'D:\py\viever\first\ico')
+
+    def test_resource_path_to_main(self):
+        self.assertEqual(resource_path('main.py'), r'D:\py\viever\first\main.py')
 
 
 if __name__ == '__main__':
