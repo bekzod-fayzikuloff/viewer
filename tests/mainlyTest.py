@@ -19,7 +19,7 @@ class ApplicationsTest(unittest.TestCase):
         self.assertEqual(test_window.windowTitle(), 'v_|0.0.1|')
 
     def test_window_geometry(self):
-        self.assertEqual(test_window.geometry(), QtCore.QRect(350, 200, 1280, 666))
+        self.assertEqual(test_window.size(), QtCore.QSize(1280, 666))
 
     def test_window_background(self):
         self.assertEqual(test_window.hasMouseTracking(), True)

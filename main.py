@@ -43,7 +43,7 @@ class FirstWindow(QWidget):
 
         super().__init__()
         self.setWindowTitle('v_|0.0.1|')
-        self.setGeometry(350, 200, 1280, 666)
+        self.resize(1280, 666)
         self.setWindowIcon(QIcon(resource_path(r'ico\L.ico')))
         self.setStyleSheet("background-color: #F0F0F0;")
 

@@ -4,7 +4,7 @@ import unittest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
-from first.elements import second_window, slider
+from first.elements import second_window, slider, thread_example
 
 app = QApplication(sys.argv)
 
@@ -43,6 +43,37 @@ class SliderElementTest(unittest.TestCase):
 
     def test_slider_orientation(self):
         self.assertEqual(SliderElementTest.test_slider_object.orientation(), QtCore.Qt.Horizontal)
+
+
+class MyThreadElementTest(unittest.TestCase):
+    test_thread_object = thread_example.MyThread
+
+    def test_simple_thread_without_args(self):
+
+        def func_example():
+            return 5
+
+        thread = MyThreadElementTest.test_thread_object(func_example)
+        self.assertEqual(thread.run(), 5)
+
+    def test_simple_thread(self):
+
+        def func_example(x):
+            return x
+
+        thread = MyThreadElementTest.test_thread_object(func_example)
+        self.assertEqual(thread.run(5), 5)
+        self.assertEqual(thread.run(x=6), 6)
+
+    def test_thread(self):
+        nums = [1, 2, 3, 4]
+
+        def func_example(x, y, *args):
+            return min([x, y, *args])
+
+        thread = MyThreadElementTest.test_thread_object(func_example)
+        self.assertEqual(thread.run(1, 2, 3, 4), 1)
+        self.assertTrue(1 == min(nums))
 
 
 if __name__ == '__main__':

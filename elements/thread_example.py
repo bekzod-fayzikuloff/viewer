@@ -5,10 +5,10 @@ from PyQt5.QtCore import QThread
 
 class MyThread(QThread):
 
-    def __init__(self, func):
+    def __init__(self, func=None):
         super().__init__()
         self.func = func
 
-    def run(self) -> None:
-        self.func()
+    def run(self, *args, **kwargs) -> None:
+        return self.func(*args, **kwargs)
 
