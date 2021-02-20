@@ -1,5 +1,6 @@
 import os
 import sys
+from first.elements.thread_example import MyThread
 
 
 def resource_path(relative):
@@ -7,4 +8,6 @@ def resource_path(relative):
         return os.path.join(sys._MEIPASS, relative)
     else:
         return os.path.join(os.path.abspath(""), relative)
+
+
 

@@ -93,5 +93,12 @@ class ConfigTest(unittest.TestCase):
         self.assertEqual(resource_path('main.py'), r'D:\py\viever\first\tests\main.py')
 
 
+class TestApplicationChanging(unittest.TestCase):
+
+    def test_window_name_change(self):
+        test_window.setWindowTitle('test_window')
+        self.assertEqual(test_window.windowTitle(), 'test_window')
+
+
 if __name__ == '__main__':
     unittest.main()

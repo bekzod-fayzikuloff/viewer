@@ -5,6 +5,7 @@ from first.elements.second_window import WindowForImage
 from first.elements.switch_button import Switch
 from first.elements.slider import MySlider
 from first.elements.thread_example import MyThread
+from first.elements.widget_frame import MyWidgetFrame
 
 from first.config.settings import resource_path
 
@@ -18,7 +19,6 @@ from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
 # полный список используемых модулей(библиотек) для создания GUI интерфейса используется модуль PyQt5
 # и его классы и также модуль : sys, time, keyboard
 # _____________________________#
-
 
 start_time = time.time()
 # также я добавил таймер для того чтобы знать сколько выполняется скрипт
@@ -144,7 +144,7 @@ class FirstWindow(QWidget):
         openBtn.setStyleSheet(config)
         openBtn.setIcon(QIcon(resource_path(r'ico\folders.png')))
         openBtn.setIconSize(QSize(20, 20))
-        openBtn.clicked.connect(self.open_file)
+        openBtn.clicked.connect(self.open_file_thread)
         openBtn.setToolTip('Открытие папок для просмотра файлов')
         openBtn.setToolTipDuration(2500)
 
@@ -156,8 +156,10 @@ class FirstWindow(QWidget):
         self.playBtn.setIcon(QIcon(resource_path(r'ico\play.png')))
         self.playBtn.setIconSize(QSize(40, 40))
         self.playBtn.clicked.connect(self.play_video_thread)
+        # self.playBtn.clicked.connect(self.play_video)
 
         # создание button(кнопки для перемотки вперед)
+
         self.forwardBtn = QPushButton()
         self.forwardBtn.setEnabled(False)
         self.forwardBtn.setIcon(QIcon(resource_path(r'ico\forward.png')))
@@ -311,13 +313,15 @@ class FirstWindow(QWidget):
         else:
             event.ignore()
 
+# ------------------------------
+
     def open_file_thread(self):
         thread = MyThread(self.open_file)
         thread.run()
 
     # Функция открытия файла
     def open_file(self):
-        global filename
+        # global filename
 
         filename, _ = QFileDialog.getOpenFileName(self)
         if filename != '':
@@ -330,6 +334,14 @@ class FirstWindow(QWidget):
     # Функция запуска и паузы видеоплеера
 
     def play_video_thread(self):
+        """
+            Запуск данного метода как клекера работает на стадии разработке но при компеляции кода 'появляется'
+            неявная ошибка после выбора файла и нажатия кнопки воспроизведения не происходит процесс воспроизведения
+            файла её можно избежать если вместо:
+            # self.playBtn.clicked.connect(self.play_video_thread)
+            прописать
+            # self.playBtn.clicked.connect(self.play_video)
+        """
         thread = MyThread(self.play_video)
         thread.run()
 
