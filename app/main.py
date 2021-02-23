@@ -1,13 +1,13 @@
 import sys
 import time
+import random
 
 from first.elements.second_window import WindowForImage
 from first.elements.switch_button import Switch
 from first.elements.slider import MySlider
-from first.elements.thread_example import MyThread
-from first.elements.widget_frame import MyWidgetFrame
+from first.elements.widget_frame import MyFrame
 
-from first.config.settings import resource_path
+from first.config.settings import BColors, resource_path
 
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QHBoxLayout,
                              QVBoxLayout, QLabel, QFileDialog, QShortcut)
@@ -21,6 +21,7 @@ from PyQt5.QtCore import Qt, QUrl, QSize, QEvent
 # _____________________________#
 
 start_time = time.time()
+colors = [BColors.OKCYAN, BColors.OKBLUE, BColors.OKGREEN]
 # также я добавил таймер для того чтобы знать сколько выполняется скрипт
 # (если запустить код пару раз то время будет отображаться корректне)
 
@@ -52,6 +53,7 @@ class FirstWindow(QWidget):
         self.init_ui()
         self.init_handlers()
         self.setAcceptDrops(True)
+        # self.setWindowFlag(Qt.FramelessWindowHint)
 
     def init_handlers(self):  # обработка нажатия для октрытия 2 окна
         self.imageBtn.clicked.connect(self.show_window_2)
@@ -92,15 +94,15 @@ class FirstWindow(QWidget):
             if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
                 slider_y = (self.slider.pos().y() - 3)
                 if event.pos().y() > slider_y:
-                    self.blef_win_on_thread()
+                    self.blef_win_on()
                 elif event.pos().y() < slider_y:
-                    self.blef_win_thread()
+                    self.blef_win()
             if self.mediaPlayer.state() == QMediaPlayer.PausedState:
-                self.blef_win_on_thread()
+                self.blef_win_on()
         else:
-            self.blef_win_on_thread()
+            self.blef_win_on()
             if self.hslider.isVisible():
-                self.blef_win_on_thread()
+                self.blef_win_on()
 
     def init_ui(self):
         conf_for_blank = '''
@@ -144,7 +146,7 @@ class FirstWindow(QWidget):
         openBtn.setStyleSheet(config)
         openBtn.setIcon(QIcon(resource_path(r'ico\folders.png')))
         openBtn.setIconSize(QSize(20, 20))
-        openBtn.clicked.connect(self.open_file_thread)
+        openBtn.clicked.connect(self.open_file)
         openBtn.setToolTip('Открытие папок для просмотра файлов')
         openBtn.setToolTipDuration(2500)
 
@@ -155,7 +157,7 @@ class FirstWindow(QWidget):
         self.playBtn.setStyleSheet(config)
         self.playBtn.setIcon(QIcon(resource_path(r'ico\play.png')))
         self.playBtn.setIconSize(QSize(40, 40))
-        self.playBtn.clicked.connect(self.play_video_thread)
+        self.playBtn.clicked.connect(self.play_video)
         # self.playBtn.clicked.connect(self.play_video)
 
         # создание button(кнопки для перемотки вперед)
@@ -189,7 +191,7 @@ class FirstWindow(QWidget):
         self.screenBtn.setStyleSheet(config)
         self.screenBtn.setIcon(QIcon(resource_path(r'ico\fullscreen.png')))
         self.screenBtn.setIconSize(QSize(19, 19))
-        self.screenBtn.clicked.connect(self.full_screen_thread)
+        self.screenBtn.clicked.connect(self.full_screen)
         self.screenBtn.setToolTip('Переключить на полноэкранный размер')
         self.screenBtn.setToolTipDuration(2500)
 # ----- кнопки для пустых мест ----- #
@@ -205,7 +207,7 @@ class FirstWindow(QWidget):
         self.themeBtn = Switch(thumb_radius=11, track_radius=8)
         self.themeBtn.setObjectName('default')
         self.themeBtn.setToolTip('Изменить задний фон')
-        self.themeBtn.clicked.connect(self.theme_thread)
+        self.themeBtn.clicked.connect(self.change_to_dark_theme)
 
         self.blankBtn = QPushButton()
         self.blankBtn.setEnabled(False)
@@ -257,7 +259,10 @@ class FirstWindow(QWidget):
         hboxLayout.addWidget(self.imageBtn)
         hboxLayout.addWidget(self.screenBtn)
 
+        # self.frame = MyFrame()
+
         vboxLayout = QVBoxLayout()
+        # vboxLayout.addWidget(MyFrame())
         vboxLayout.addWidget(videowidget)
         vboxLayout.addLayout(hboxLayout2)
         vboxLayout.addLayout(hboxLayout)
@@ -287,7 +292,7 @@ class FirstWindow(QWidget):
         self.backSc.activated.connect(self.go_back_with_key)
 
         self.fullscreenSc = QShortcut(QKeySequence('F'), self)
-        self.fullscreenSc.activated.connect(self.full_screen_thread)
+        self.fullscreenSc.activated.connect(self.full_screen)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasImage:
@@ -315,10 +320,6 @@ class FirstWindow(QWidget):
 
 # ------------------------------
 
-    def open_file_thread(self):
-        thread = MyThread(self.open_file)
-        thread.run()
-
     # Функция открытия файла
     def open_file(self):
         # global filename
@@ -332,18 +333,6 @@ class FirstWindow(QWidget):
 
 # --------------------------------------
     # Функция запуска и паузы видеоплеера
-
-    def play_video_thread(self):
-        """
-            Запуск данного метода как клекера работает на стадии разработке но при компеляции кода 'появляется'
-            неявная ошибка после выбора файла и нажатия кнопки воспроизведения не происходит процесс воспроизведения
-            файла её можно избежать если вместо:
-            # self.playBtn.clicked.connect(self.play_video_thread)
-            прописать
-            # self.playBtn.clicked.connect(self.play_video)
-        """
-        thread = MyThread(self.play_video)
-        thread.run()
 
     def play_video(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
@@ -361,10 +350,6 @@ class FirstWindow(QWidget):
         pos = max(pos + 1000, pos)
         self.mediaPlayer.setPosition(pos)
 # --------------------------------------
-
-    def blef_win_thread(self):
-        thread = MyThread(self.blef_win)
-        thread.run()
 
     def blef_win(self):
         # Сокрытие вернего слоя Layout'a
@@ -384,10 +369,6 @@ class FirstWindow(QWidget):
 
 # --------------------------------------
 
-    def blef_win_on_thread(self):
-        thread = MyThread(self.blef_win_on)
-        thread.run()
-
     def blef_win_on(self):
         # 'Показать' верний слой Layout'a
         self.label1.setVisible(True)
@@ -404,10 +385,6 @@ class FirstWindow(QWidget):
         self.screenBtn.setVisible(True)
         self.themeBtn.setVisible(True)
 # --------------------------------------
-
-    def theme_thread(self):
-        thread = MyThread(self.change_to_dark_theme)
-        thread.run()
 
     def change_to_dark_theme(self):
         dark = '#3C3F41'
@@ -469,9 +446,6 @@ class FirstWindow(QWidget):
 
     # Функия для полноэкранного режима
 # --------------------------------------
-    def full_screen_thread(self):
-        thread = MyThread(self.full_screen)
-        thread.run()
 
     def full_screen(self):
         if self.screenBtn.objectName() == 'fullscreen':
@@ -585,7 +559,13 @@ class FirstWindow(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = FirstWindow()
-    print("--- {} секунд ---".format(time.time() - start_time))
+    final_time = time.time() - start_time
+    if int(str(final_time)[0]) < 1:
+        print(f"{BColors.BOLD}{random.choice(colors)}--- {final_time} секунд ---")
+    elif int(str(final_time)[0]) == 1:
+        print(f"{BColors.BOLD}{BColors.WARNING}--- {final_time} секунд ---")
+    else:
+        print(f"{BColors.BOLD}{BColors.FAIL}--- {final_time} секунд ---")
     window.show()
     sys.exit(app.exec_())
     # основное окно готово !!;)

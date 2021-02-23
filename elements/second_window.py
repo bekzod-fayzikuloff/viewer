@@ -5,7 +5,7 @@ from first.config.settings import resource_path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QApplication
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QApplication, QPushButton
 
 
 class ImageLabel(QLabel):
@@ -44,6 +44,7 @@ class WindowForImage(QWidget):
         self.mainLayout = QVBoxLayout()
 
         self.photoViewer = ImageLabel()
+
         self.mainLayout.addWidget(self.photoViewer)
 
         self.setLayout(self.mainLayout)

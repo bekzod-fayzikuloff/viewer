@@ -1,5 +1,3 @@
-import time
-
 from PyQt5.QtCore import QThread
 
 
@@ -9,6 +7,6 @@ class MyThread(QThread):
         super().__init__()
         self.func = func
 
-    def run(self, *args, **kwargs) -> None:
-        return self.func(*args, **kwargs)
+    def run(self) -> None:
+        return self.func()
 

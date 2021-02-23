@@ -99,6 +99,18 @@ class TestApplicationChanging(unittest.TestCase):
         test_window.setWindowTitle('test_window')
         self.assertEqual(test_window.windowTitle(), 'test_window')
 
+    def test_btn_obj_name_change(self):
+        test_window.playBtn.setObjectName('test_play_button')
+        self.assertEqual(test_window.playBtn.objectName(), 'test_play_button')
+
+    def test_player_duration_change(self):
+        test_window.mediaPlayer.setPosition(1000)
+        self.assertEqual(test_window.mediaPlayer.position(), 1000)
+
+    def test_volume_duration_change(self):
+        test_window.slider.setTickPosition(100)
+        self.assertEqual(test_window.slider.tickPosition(), 100)
+
 
 if __name__ == '__main__':
     unittest.main()

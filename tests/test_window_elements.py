@@ -56,25 +56,6 @@ class MyThreadElementTest(unittest.TestCase):
         thread = MyThreadElementTest.test_thread_object(func_example)
         self.assertEqual(thread.run(), 5)
 
-    def test_simple_thread(self):
-
-        def func_example(x):
-            return x
-
-        thread = MyThreadElementTest.test_thread_object(func_example)
-        self.assertEqual(thread.run(5), 5)
-        self.assertEqual(thread.run(x=6), 6)
-
-    def test_thread(self):
-        nums = [1, 2, 3, 4]
-
-        def func_example(x, y, *args):
-            return min([x, y, *args])
-
-        thread = MyThreadElementTest.test_thread_object(func_example)
-        self.assertEqual(thread.run(1, 2, 3, 4), 1)
-        self.assertTrue(1 == min(nums))
-
 
 if __name__ == '__main__':
     unittest.main()
